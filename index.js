@@ -157,7 +157,7 @@ function loadWallets() {
       }
       
       try {
-        const wallet = new ethers.Wallet(privateKey);
+        const wallet = new ers.Wallet(privateKey);
         wallets.push({
           wallet,
           name: walletName,
@@ -189,7 +189,7 @@ function getProvider(walletData) {
     logger.proxy(`Sử dụng proxy: ${proxy}`);
     const agent = getProxyAgent(proxy);
     
-    return new ethers.JsonRpcProvider(CONFIG.RPC_URL, {
+    return new ers.JsonRpcProvider(CONFIG.RPC_URL, {
       chainId: CONFIG.CHAIN_ID,
       name: 'Arc Testnet'
     }, {
@@ -199,7 +199,7 @@ function getProvider(walletData) {
     });
   }
   
-  return new ethers.JsonRpcProvider(CONFIG.RPC_URL, {
+  return new ers.JsonRpcProvider(CONFIG.RPC_URL, {
     chainId: CONFIG.CHAIN_ID,
     name: 'Arc Testnet'
   });
@@ -221,11 +221,11 @@ async function checkBalance(walletData) {
   try {
     const provider = getProvider(walletData);
     const balance = await provider.getBalance(walletData.wallet.address);
-    const balanceEth = ethers.formatEther(balance);
+    const balance = ers.formater(balance);
     
     return {
-      balance: balanceEth,
-      sufficient: parseFloat(balanceEth) >= CONFIG.MIN_BALANCE
+      balance: balance,
+      sufficient: parseFloat(balance) >= CONFIG.MIN_BALANCE
     };
   } catch (error) {
     logger.warn(`[${walletData.name}] Không thể kiểm tra số dư: ${error.message}`);
@@ -298,7 +298,7 @@ async function manualFaucetFlow(walletsData) {
       
       // Check balance again
       const newBalance = await checkBalance(walletData);
-      logger.info(`[${walletData.name}] Số dư mới: ${newBalance.balance} ETH`);
+      logger.info(`[${walletData.name}] Số dư mới: ${newBalance.balance} USDC`);
       
       if (newBalance.sufficient) {
         logger.success(`[${walletData.name}] Đã nhận token thành công!`);
@@ -455,7 +455,7 @@ async function autoAll(walletsData) {
     
     for (const walletData of walletsData) {
       const balanceCheck = await checkBalance(walletData);
-      logger.info(`[${walletData.name}] Số dư: ${balanceCheck.balance} ETH`);
+      logger.info(`[${walletData.name}] Số dư: ${balanceCheck.balance} USDC`);
       
       if (balanceCheck.sufficient) {
         walletsWithBalance.push(walletData);
@@ -573,7 +573,7 @@ async function checkAllBalances(walletsData) {
   for (const walletData of walletsData) {
     const balanceCheck = await checkBalance(walletData);
     const status = balanceCheck.sufficient ? `${colors.green}✓${colors.reset}` : `${colors.red}✗${colors.reset}`;
-    console.log(`${status} [${walletData.name}] ${walletData.wallet.address}: ${balanceCheck.balance} ETH`);
+    console.log(`${status} [${walletData.name}] ${walletData.wallet.address}: ${balanceCheck.balance} USDC`);
   }
   
   console.log(`\n${colors.cyan}${'═'.repeat(60)}${colors.reset}`);
