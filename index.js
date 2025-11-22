@@ -280,7 +280,7 @@ async function manualFaucetFlow(walletsData) {
     
     // Check balance first
     const balanceCheck = await checkBalance(walletData);
-    logger.info(`[${walletData.name}] Số dư hiện tại: ${balanceCheck.balance} ETH`);
+    logger.info(`[${walletData.name}] Số dư hiện tại: ${balanceCheck.balance} USDC`);
     
     if (balanceCheck.sufficient) {
       logger.success(`[${walletData.name}] Đã có số dư đủ! Bỏ qua...`);
