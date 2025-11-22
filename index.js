@@ -30,7 +30,7 @@ const logger = {
     console.log('╭─────────────────────────────────────────────────────────────────────────────────────╮');
     console.log('│                                                                                         │');
     console.log(`│${colors.magenta}                        🚀 ARC TESTNET AUTOMATION V2.1 🚀                     ${colors.cyan}│`);
-    console.log(`│${colors.yellow}                       Bộ công cụ tự động đa ví - WangMinHei             ${colors.cyan}│`);
+    console.log(`│${colors.yellow}                   Bộ công cụ tự động đa ví - Phiên bản tiếng Việt             ${colors.cyan}│`);
     console.log('│                                                                                         │');
     console.log('╰─────────────────────────────────────────────────────────────────────────────────────╯');
     console.log(`${colors.reset}\n`);
@@ -157,7 +157,7 @@ function loadWallets() {
       }
       
       try {
-        const wallet = new ers.Wallet(privateKey);
+        const wallet = new ethers.Wallet(privateKey);
         wallets.push({
           wallet,
           name: walletName,
@@ -189,7 +189,7 @@ function getProvider(walletData) {
     logger.proxy(`Sử dụng proxy: ${proxy}`);
     const agent = getProxyAgent(proxy);
     
-    return new ers.JsonRpcProvider(CONFIG.RPC_URL, {
+    return new ethers.JsonRpcProvider(CONFIG.RPC_URL, {
       chainId: CONFIG.CHAIN_ID,
       name: 'Arc Testnet'
     }, {
@@ -199,7 +199,7 @@ function getProvider(walletData) {
     });
   }
   
-  return new ers.JsonRpcProvider(CONFIG.RPC_URL, {
+  return new ethers.JsonRpcProvider(CONFIG.RPC_URL, {
     chainId: CONFIG.CHAIN_ID,
     name: 'Arc Testnet'
   });
@@ -221,11 +221,11 @@ async function checkBalance(walletData) {
   try {
     const provider = getProvider(walletData);
     const balance = await provider.getBalance(walletData.wallet.address);
-    const balance = ers.formater(balance);
+    const balanceEth = ethers.formatEther(balance);
     
     return {
-      balance: balance,
-      sufficient: parseFloat(balance) >= CONFIG.MIN_BALANCE
+      balance: balanceEth,
+      sufficient: parseFloat(balanceEth) >= CONFIG.MIN_BALANCE
     };
   } catch (error) {
     logger.warn(`[${walletData.name}] Không thể kiểm tra số dư: ${error.message}`);
@@ -370,7 +370,7 @@ async function deployToken(walletData, name, symbol, supply) {
     const creationFee = BigInt('0x21a6bbdb5000');
     
     logger.info(`[${walletName}] Token: ${name} (${symbol}) | Tổng cung: ${supply}`);
-    logger.info(`[${walletName}] Phí tạo: 0.000037 ETH`);
+    logger.info(`[${walletName}] Phí tạo: 0.000037 USDC`);
     
     const tx = await retryOperation(async () => {
       return await wallet.sendTransaction({
